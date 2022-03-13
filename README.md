@@ -2,6 +2,8 @@
 
 This is a plugin for PowerToys Run that formats the input using the API provided by [SQLFormat.org](https://sqlformat.org/).
 
+![Screenshot of the SQL Formatter](/assets/screenshot.png?raw=true)
+
 ## Installation
 
 **Minimum PowerToys version: 0.56.2**
