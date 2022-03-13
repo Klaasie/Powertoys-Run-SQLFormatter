@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Formatter": {
+      "commandName": "Project",
+      "remoteDebugEnabled": false
+    }
+  }
+}

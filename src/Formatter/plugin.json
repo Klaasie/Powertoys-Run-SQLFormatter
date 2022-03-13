@@ -1,0 +1,14 @@
+{
+  "ID": "H1OB1TDS2MGQ3FIJFRUERLFXWLAXNJRT",
+  "Disabled": false,
+  "ActionKeyword": "sf",
+  "Name": "SQL Formatter",
+  "Author": "Klaasie",
+  "Version": "1.0.0",
+  "Language": "csharp",
+  "Website": "https://github.com/klaasie/powertoys-run-sf",
+  "ExecuteFileName": "klaasie.Sf.dll",
+  "IsGlobal": false,
+  "IcoPathDark": "images\\sf.dark.png",
+  "IcoPathLight": "images\\sf.light.png"
+}
