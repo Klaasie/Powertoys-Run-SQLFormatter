@@ -57,8 +57,13 @@ namespace Klaasie.Sf
                     QueryTextDisplay = String.Empty,
                     Action = action =>
                     {
-                        Task<Response> response = ApiClient.Format(query.Search);
-                        Clipboard.SetText(response.Result.Result);
+                        Response response = Task.Run(async () => {
+                            var result = await ApiClient.Format(query.Search);
+                            return result;
+                        }).Result;
+
+                        Clipboard.SetText(response.Result);
+
                         return true;
                     }
 

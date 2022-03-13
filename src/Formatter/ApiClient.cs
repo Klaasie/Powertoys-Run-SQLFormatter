@@ -1,11 +1,17 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 namespace Klaasie.Sf
 {
     public class Response
     {
         public string? Result { get; set; }
+        public string? Error { get; set; }
+
+        public static implicit operator Task<object>(Response v)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class ApiClient
@@ -14,8 +20,10 @@ namespace Klaasie.Sf
 
         static ApiClient()
         {
-            client = new HttpClient();
-            client.BaseAddress = new Uri("https://sqlformat.org/api/v1/");
+            client = new HttpClient
+            {
+                BaseAddress = new Uri("https://sqlformat.org/api/v1/")
+            };
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
@@ -23,24 +31,28 @@ namespace Klaasie.Sf
 
         public static async Task<Response> Format(string sql)
         {
-
-            var query = new Dictionary<string, string>()
+            var formContent = new FormUrlEncodedContent(new[]
             {
-                ["reindent"] = "1",
-                ["sql"] = sql
-            };
+                new KeyValuePair<string, string>("reindent", "1"),
+                new KeyValuePair<string, string>("sql", sql)
+            });
 
-            Response response = new();
+            HttpResponseMessage responseMessage = await client.PostAsync("format", formContent);
 
-            var uri = QueryHelpers.AddQueryString("format", query);
-            HttpResponseMessage responseMessage = await client.GetAsync(uri);
-
+            Response response = new(); 
             if (responseMessage.IsSuccessStatusCode)
             {
-                response = await responseMessage.Content.ReadAsAsync<Response>();
+                #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+                response = await responseMessage.Content.ReadFromJsonAsync<Response>();
+                #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+            } else
+            {
+                response.Error = responseMessage.ReasonPhrase;
             }
 
+            #pragma warning disable CS8603 // Possible null reference return.
             return response;
+            #pragma warning restore CS8603 // Possible null reference return.
         }
     }
 }
